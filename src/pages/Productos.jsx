@@ -15,7 +15,9 @@ const Productos = () => {
     precio: '',
     stock: '',
     descripcion: '',
-    imagen_url: ''
+    imagen_url: '',
+    id_categoria: '',
+    youtube_id: ''
   });
 
   useEffect(() => {
@@ -95,7 +97,9 @@ const Productos = () => {
         precio: '',
         stock: '',
         descripcion: '',
-        imagen_url: ''
+        imagen_url: '',
+        id_categoria: '',
+        youtube_id: ''
       });
       await cargarProductos();
       setShowForm(false);
@@ -197,6 +201,17 @@ const Productos = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">URL del video Youtube</label>
+              <input
+                name="youtube_id"
+                value={nuevoProducto.youtube_id}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://..."
+              />
+            </div>
+
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
               <textarea
@@ -209,6 +224,7 @@ const Productos = () => {
               />
             </div>
           </div>
+
 
           <div className="mt-4 flex gap-3">
             <button
@@ -242,11 +258,15 @@ const Productos = () => {
             
             {/* Imagen del producto */}
             <div className="h-48 p-4 bg-white flex items-center justify-center border-b border-slate-50">
-              <img 
-                src={prod.imagen_url || "https://via.placeholder.com/150"} 
-                alt={prod.nombre} 
-                className="max-h-full object-contain"
-              />
+              {prod.youtube_id ? (
+                <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${prod.youtube_id}`} title='Youtube video player' frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+              ) : (
+                <img 
+                  src={prod.imagen_url || "https://via.placeholder.com/150"} 
+                  alt={prod.nombre} 
+                  className="max-h-full object-contain"
+                />
+              )}
             </div>
 
             <div className="p-4 flex-1 flex flex-col">
