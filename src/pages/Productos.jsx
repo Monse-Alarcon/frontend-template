@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
-import { ShoppingBag, Loader, AlertCircle, Plus } from 'lucide-react';
+import { ShoppingBag, Loader, AlertCircle, Plus, X, MessageCircle, Twitter, Share2 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -129,7 +129,23 @@ const Productos = () => {
     </div>
   );
 
-  
+  const compartirWhatsApp = (producto) => {
+    // 1. Redactamos la carta con los datos reales de la BD
+    const mensaje = `¡Mira lo que encontré en la tienda!\n\n${producto.nombre}\n  $${producto.precio}\n\n¿Te interesa?`;
+   
+    // 2. Empacamos el mensaje para que la URL no explote
+    const textoCodificado = encodeURIComponent(mensaje);
+   
+    // 3. Enviamos al usuario a la oficina de correos (Abre pestaña nueva)
+    window.open(`https://api.whatsapp.com/send?text=${textoCodificado}`, '_blank');
+  };
+
+  const compartirTwitter = (producto) => {
+    const mensaje = `Increíble producto en la tienda: ${producto.nombre} por solo $${producto.precio}. ¡Tienen que verlo!   #InventarioPro`;
+    const textoCodificado = encodeURIComponent(mensaje);
+   
+    window.open(`https://twitter.com/intent/tweet?text=${textoCodificado}`, '_blank');
+  };
 
 
   return (
@@ -372,6 +388,29 @@ const Productos = () => {
               </MapContainer>
             </div>
 
+            {/* NUEVO: Barra de Redes Sociales */}
+            <div className="pt-3 flex justify-between items-center bg-slate-50 -mx-4 -mb-4 px-4 py-3 rounded-b-xl border-t border-slate-100">
+              <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                <Share2 size={14} /> Compartir:
+              </span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => compartirWhatsApp(prod)}
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition shadow-sm"
+                  title="Compartir en WhatsApp"
+                >
+                  <MessageCircle size={16} />
+                </button>
+                <button
+                  onClick={() => compartirTwitter(prod)}
+                  className="bg-black hover:bg-slate-800 text-white p-2 rounded-full transition shadow-sm"
+                  title="Compartir en X (Twitter)"
+                >
+                  <Twitter size={16} />
+                </button>
+              </div>
+            </div>
+            
           </div>
         ))}
       </div>
