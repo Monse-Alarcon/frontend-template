@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { ShoppingBag, Loader, AlertCircle, Plus } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
@@ -17,7 +19,9 @@ const Productos = () => {
     descripcion: '',
     imagen_url: '',
     id_categoria: '',
-    youtube_id: ''
+    youtube_id: '',
+    latitud: '',
+    longitud: ''
   });
 
   useEffect(() => {
@@ -99,7 +103,10 @@ const Productos = () => {
         descripcion: '',
         imagen_url: '',
         id_categoria: '',
-        youtube_id: ''
+        youtube_id: '',
+        latitud: '',
+        longitud: ''
+
       });
       await cargarProductos();
       setShowForm(false);
@@ -121,6 +128,9 @@ const Productos = () => {
       <AlertCircle /> {error}
     </div>
   );
+
+  
+
 
   return (
     <div>
@@ -212,6 +222,54 @@ const Productos = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">URL del video Youtube</label>
+              <input
+                name="youtube_id"
+                value={nuevoProducto.youtube_id}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">URL del video Youtube</label>
+              <input
+                name="youtube_id"
+                value={nuevoProducto.youtube_id}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Latitud</label>
+              <input
+                name="latitud"
+                type="number"
+                step="0.000001"
+                value={nuevoProducto.latitud}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ej. 40.712776"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Longitud</label>
+              <input
+                name="longitud"
+                type="number"
+                step="0.000001"
+                value={nuevoProducto.longitud}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ej. -74.005974"
+              />
+            </div>
+
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
               <textarea
@@ -292,6 +350,28 @@ const Productos = () => {
                 </button>
               </div>
             </div>
+
+            <div className='h-48 w-full border-t border-slate-100 z-0 relative'>
+              <MapContainer 
+                center={[prod.latitud ||19.432608, prod.longitud || -99.133209]}
+                zoom={13}
+                style={{ height: '100%', width: '100%', zIndex: 0 }}
+              >
+              {/*Este es el servidor de openstreetmap que nos arregla los maps gratis*/}
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; OpenStreetMap'
+                />
+                <Marker position={[prod.latitud ||19.432608, prod.longitud || -99.133209]}>
+                  <Popup>
+                    <div>
+                      Ubicacion de: <strong>{prod.nombre}</strong>
+                    </div>
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+
           </div>
         ))}
       </div>
